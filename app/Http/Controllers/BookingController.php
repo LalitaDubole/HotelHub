@@ -54,7 +54,7 @@ class BookingController extends Controller
             Mail::to(auth()->user()->email)
                 ->send(new BookingConfirmation($booking));
         } catch (\Exception $e) {
-            // Email fail hone par bhi booking confirm rahegi
+            // Booking will be confirmed even if email fails
         }
 
         return redirect()->route('bookings.show', $booking)
