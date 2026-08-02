@@ -31,6 +31,9 @@ RUN echo '<VirtualHost *:80>\n\
 
 RUN a2enmod rewrite
 
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+CMD ["/start.sh"]
