@@ -4,10 +4,11 @@ RUN apt-get update -y && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     libzip-dev \
+    libpq-dev \
     zip \
     unzip \
     dos2unix \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql pgsql mbstring zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
