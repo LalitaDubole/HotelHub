@@ -6,6 +6,7 @@ RUN apt-get update -y && apt-get install -y \
     libzip-dev \
     zip \
     unzip \
+    dos2unix \
     && docker-php-ext-install pdo pdo_mysql mbstring zip \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
@@ -15,6 +16,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 COPY . .
+
+RUN dos2unix /var/www/html/start.sh
 
 RUN composer install --no-dev --optimize-autoloader
 
@@ -31,9 +34,8 @@ RUN echo '<VirtualHost *:80>\n\
 
 RUN a2enmod rewrite
 
-COPY start.sh /start.sh
-RUN chmod +x /start.sh
+RUN chmod +x /var/www/html/start.sh
 
 EXPOSE 80
 
-CMD ["/start.sh"]
+CMD ["/bin/bash", "/var/www/html/start.sh"]
