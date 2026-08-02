@@ -1,8 +1,14 @@
 FROM php:8.2-apache
 
-RUN apt-get update && apt-get install -y \
-    libzip-dev zip unzip git curl \
-    && docker-php-ext-install pdo pdo_mysql mbstring zip
+RUN apt-get update -y && apt-get install -y \
+    libonig-dev \
+    libxml2-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    && docker-php-ext-install pdo pdo_mysql mbstring zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -12,7 +18,8 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-RUN chown -R www-data:www-data storage bootstrap/cache
+RUN chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 RUN echo '<VirtualHost *:80>\n\
     DocumentRoot /var/www/html/public\n\
