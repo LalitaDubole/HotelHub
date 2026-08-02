@@ -17,9 +17,11 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN dos2unix /var/www/html/start.sh
+RUN cp .env.example .env
 
 RUN composer install --no-dev --optimize-autoloader
+
+RUN php artisan key:generate --force
 
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
@@ -34,7 +36,8 @@ RUN echo '<VirtualHost *:80>\n\
 
 RUN a2enmod rewrite
 
-RUN chmod +x /var/www/html/start.sh
+RUN dos2unix /var/www/html/start.sh \
+    && chmod +x /var/www/html/start.sh
 
 EXPOSE 80
 
